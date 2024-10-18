@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "LLM Red-Teaming Logger",
+  "version": "1.0",
+  "description": "Logs prompts and outputs for an LLM red-teaming site.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "host_permissions": ["*://*/*"]
+}
