@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Giskard RED Helper extension",
+  "name": "Giskard RED Helper",
   "icons": {
     "128": "favicon.png",
     "48": "favicon.png",
