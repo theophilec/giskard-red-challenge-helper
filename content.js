@@ -1,47 +1,3 @@
-// // Function to log prompt and response
-// function logInteraction() {
-//   const challengeName = document
-//     .querySelector("h1")
-//     .innerText.trim()
-//     .replace(/\s+/g, "_");
-//   const fileName = `${challengeName}.md`;
-
-//   const entireField = document.querySelector('class="my-8 lg:flex lg:gap-x-8"');
-//   const promptField = document.querySelector("#user_prompt");
-//   const outputField = document.querySelector(".whitespace-pre-wrap");
-
-//   if (promptField && outputField) {
-//     const prompt = promptField.value;
-//     const output = outputField.innerText;
-//     console.log(Date.now());
-//     console.log(prompt);
-//     console.log(output);
-//     console.log("Logger: Prompt and response logged.");
-//   } else {
-//     console.log("Failed to find elements.");
-//   }
-// }
-
-// function observeResponse() {
-//   logInteraction();
-// }
-
-// // Function to attach event listener to the submit button
-// function attachSubmitListener() {
-//   const submitButton = document.querySelector("button");
-//   console.log("Logger: Trying to attach listener to submit button...");
-
-//   if (submitButton) {
-//     console.log("Logger: Submit button found, adding event listener.");
-//     submitButton.addEventListener("click", (event) => {
-//       console.log("Logger: Submit button clicked.");
-//       observeResponse();
-//     });
-//   } else {
-//     console.log("Logger: Submit button not found. Exiting.");
-//   }
-// }
-
 function go() {
   // This grabs both form and response
   var container = document.querySelector(
@@ -49,10 +5,46 @@ function go() {
   );
   console.log(container.textContent);
 
+  const splitURL = window.location.toString().split("/");
+  const challengeName = splitURL[splitURL.length - 1];
+  console.log("Challenge name:", challengeName);
+
+  // open DB
+  const dbName = "llmDB";
+  const dbVersion = 1;
+  let db;
+
+  const request = indexedDB.open(dbName, dbVersion);
+
+  request.onerror = (event) => {
+    console.error("IndexedDB error:", event.target.error);
+  };
+
+  request.onsuccess = (event) => {
+    db = event.target.result;
+    console.log("IndexedDB opened successfully");
+  };
+
+  request.onupgradeneeded = (event) => {
+    db = event.target.result;
+    const objectStore = db.createObjectStore("triesStore", {
+      keyPath: "id",
+      autoIncrement: true,
+    });
+    console.log("Object store created");
+  };
+  let lastUrl = location.href;
+
   // create an observer instance with callback function that acts on a list of mutations
-  var observer = new MutationObserver(function (mutations) {
+  var observer = new MutationObserver(function (mutations, obs) {
     // console.log("Mutations detected");
     mutations.forEach(function (mutation) {
+      const url = location.href;
+      if (url !== lastUrl) {
+        lastUrl = url;
+        obs.disconnect();
+        setTimeout(go, 1000);
+      }
       // console.log("Mutation");
       // determine if response has arrived
       const response = container.lastChild.children[1].textContent;
@@ -64,6 +56,25 @@ function go() {
         const prompt = container.firstChild.firstChild.children[1].value;
         console.log("Prompt:", prompt);
         console.log("Response:", response);
+        const dataToAdd = {
+          timestamp: new Date().toISOString(),
+          challenge: challengeName,
+          prompt: prompt,
+          response: response,
+        };
+
+        // Add data to IndexedDB
+        const transaction = db.transaction(["triesStore"], "readwrite");
+        const objectStore = transaction.objectStore("triesStore");
+        const request = objectStore.add(dataToAdd);
+
+        request.onerror = (event) => {
+          console.error("Error adding data to IndexedDB:", event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+          console.log("Data added to IndexedDB successfully");
+        };
       }
     });
   });
@@ -87,5 +98,25 @@ function go() {
 
 // Wait for the DOM to fully load before running the script
 window.addEventListener("load", () => {
-  setTimeout(go, 1000);
+  const splitURL = window.location.toString().split("/");
+  if (splitURL.length == 6) {
+    console.log("On a challenge page -> starting script.");
+    setTimeout(go, 1000);
+  } else {
+    console.log("Ignoring page.");
+  }
 });
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    const splitURL = window.location.toString().split("/");
+    if (splitURL.length == 6) {
+      console.log("On a challenge page -> starting script.");
+      setTimeout(go, 1000);
+    } else {
+      console.log("Ignoring page.");
+    }
+  }
+}).observe(document, { subtree: true, childList: true });
