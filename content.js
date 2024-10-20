@@ -44,26 +44,41 @@
 
 function go() {
   // This grabs both form and response
-  var target = document.querySelector('div[class="my-8 lg:flex lg:gap-x-8"]');
-  // console.log(target.textContent);
+  var container = document.querySelector(
+    'div[class="my-8 lg:flex lg:gap-x-8"]',
+  );
+  console.log(container.textContent);
 
-  // create an observer instance
+  // create an observer instance with callback function that acts on a list of mutations
   var observer = new MutationObserver(function (mutations) {
+    // console.log("Mutations detected");
     mutations.forEach(function (mutation) {
-      console.log("Mutation change");
-      console.log(mutation.type);
-      // if (
-      //   document.querySelector('div[class="lg:w-1/2 max-w-xl"] > p').textContent
-      // ) {
-      // }
+      // console.log("Mutation");
+      // determine if response has arrived
+      const response = container.lastChild.children[1].textContent;
+      // console.log("Response:", container.lastChild.children[1].textContent);
+      if (response == "Thinking…") {
+        // console.log("Waiting for response...");
+      } else {
+        // console.log("Response recieved:");
+        const prompt = container.firstChild.firstChild.children[1].value;
+        console.log("Prompt:", prompt);
+        console.log("Response:", response);
+      }
     });
   });
 
   // configuration of the observer:
-  var config = { attributes: true, childList: true, characterData: true };
+  var config = {
+    characterData: true,
+    attributes: false,
+    childList: false,
+    subtree: true,
+  };
 
   // pass in the target node, as well as the observer options
-  observer.observe(target, config);
+  observer.observe(container, config);
+  console.log("Observing");
 
   // // later, you can stop observing
   // console.log("Disconnecting");
@@ -72,6 +87,5 @@ function go() {
 
 // Wait for the DOM to fully load before running the script
 window.addEventListener("load", () => {
-  setTimeout(go, 3000);
-  console.log("Stopped");
+  setTimeout(go, 1000);
 });
