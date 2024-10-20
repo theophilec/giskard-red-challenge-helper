@@ -120,3 +120,34 @@ new MutationObserver(() => {
     }
   }
 }).observe(document, { subtree: true, childList: true });
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "getData") {
+    const dbName = "llmDB";
+    const dbVersion = 1;
+    const request = indexedDB.open(dbName, dbVersion);
+
+    request.onerror = (event) => {
+      console.error("IndexedDB error:", event.target.error);
+      sendResponse({ error: "Failed to open database" });
+    };
+
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction(["triesStore"], "readonly");
+      const objectStore = transaction.objectStore("triesStore");
+      const getAllRequest = objectStore.getAll();
+
+      getAllRequest.onerror = (event) => {
+        console.error("Error getting data:", event.target.error);
+        sendResponse({ error: "Failed to retrieve data" });
+      };
+
+      getAllRequest.onsuccess = (event) => {
+        sendResponse({ data: event.target.result });
+      };
+    };
+
+    return true; // Indicates that the response is sent asynchronously
+  }
+});

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Data Viewer</title>
+    <style>
+        body {
+            width: 600px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Challenge Data Viewer</h1>
+    <select id="challengeSelect">
+        <option value="">Select a challenge</option>
+    </select>
+    <button id="exportButton">Export All Data</button>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Prompt</th>
+                <th>Response</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+    <script src="popup.js"></script>
+</body>
+</html>

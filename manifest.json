@@ -3,7 +3,7 @@
   "name": "LLM Red-Teaming Logger",
   "version": "1.0",
   "description": "Logs prompts and outputs for an LLM red-teaming site.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "downloads", "tabs"],
   "background": {
     "service_worker": "background.js"
   },
@@ -14,5 +14,8 @@
       "run_at": "document_end"
     }
   ],
-  "host_permissions": ["*://*/*"]
+  "host_permissions": ["*://*/*"],
+  "action": {
+    "default_popup": "popup.html"
+  }
 }
