@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "LLM Red-Teaming Logger",
+  "name": "Giskard RED Helper extension",
   "version": "1.0",
-  "description": "Logs prompts and outputs for an LLM red-teaming site.",
+  "description": "Logs prompts and outputs for the Giskard RED LLM red-teaming challenge.",
   "permissions": ["storage", "activeTab", "scripting", "downloads", "tabs"],
   "background": {
     "service_worker": "background.js"
@@ -14,7 +14,7 @@
       "run_at": "document_end"
     }
   ],
-  "host_permissions": ["*://*/*"],
+  "host_permissions": ["https://red.giskard.ai/challenges/*"],
   "action": {
     "default_popup": "popup.html"
   }
