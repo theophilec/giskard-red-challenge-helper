@@ -3,7 +3,6 @@ function go() {
   var container = document.querySelector(
     'div[class="my-8 lg:flex lg:gap-x-8"]',
   );
-  console.log(container.textContent);
 
   const splitURL = window.location.toString().split("/");
   const challengeName = splitURL[splitURL.length - 1];
@@ -35,9 +34,7 @@ function go() {
   };
   let lastUrl = location.href;
 
-  // create an observer instance with callback function that acts on a list of mutations
   var observer = new MutationObserver(function (mutations, obs) {
-    // console.log("Mutations detected");
     mutations.forEach(function (mutation) {
       const url = location.href;
       if (url !== lastUrl) {
@@ -45,12 +42,9 @@ function go() {
         obs.disconnect();
         setTimeout(go, 1000);
       }
-      // console.log("Mutation");
       // determine if response has arrived
       const response = container.lastChild.children[1].textContent;
-      // console.log("Response:", container.lastChild.children[1].textContent);
       if (response == "Thinking…") {
-        // console.log("Waiting for response...");
       } else {
         // console.log("Response recieved:");
         const prompt = container.firstChild.firstChild.children[1].value;
