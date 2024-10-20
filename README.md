@@ -1,7 +1,5 @@
 # Giskard RED Challenge Helper
 
-## Description
-
 The Giskard RED Challenge Helper is a Chrome extension designed to assist users participating in the Giskard RED LLM red-teaming challenge. It logs prompts and outputs from the challenge, allowing users to easily review and export their interaction data.
 
 ## Key Features
@@ -20,6 +18,10 @@ To install the Giskard RED Helper Extension as an unpacked extension:
 3. Enable "Developer mode" in the top right corner
 4. Click "Load unpacked" and select the directory containing the extension files
 5. The extension should now appear in your Chrome toolbar
+
+## How does it work?
+
+The extension watches for changes to the DOM and captures prompts and responses using IndexedDB local storage. The database is then queried to display the history. One tricky part is that the challenge website is a SPA (try to go back when you [click here](https://red.giskard.ai/)) and so we need to also handle navigation on the site (I opted for watching the URL in addition to the page contents).
 
 ## License
 
