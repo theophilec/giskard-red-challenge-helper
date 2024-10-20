@@ -1,6 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Giskard RED Helper extension",
+  "icons": {
+    "128": "favicon.png",
+    "48": "favicon.png",
+    "16": "favicon.png"
+  },
   "version": "1.0",
   "description": "Logs prompts and outputs for the Giskard RED LLM red-teaming challenge.",
   "permissions": ["storage", "activeTab", "scripting", "downloads", "tabs"],
