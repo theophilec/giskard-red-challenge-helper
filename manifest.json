@@ -4,9 +4,6 @@
   "version": "1.0",
   "description": "Logs prompts and outputs for the Giskard RED LLM red-teaming challenge.",
   "permissions": ["storage", "activeTab", "scripting", "downloads", "tabs"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": ["https://red.giskard.ai/challenges/*"],
